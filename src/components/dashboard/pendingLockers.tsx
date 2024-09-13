@@ -56,7 +56,7 @@ export default function PendingLockers() {
     return (
         <div className="ml-6">
             <h2>
-                Pending Lockers
+                Pending Orders
             </h2>
             <div className="flex flex-row flex-wrap  mt-4">
                 {pendingOrders && pendingOrders.length > 0 && pendingOrders?.map((order: Order) => {

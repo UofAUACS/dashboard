@@ -3,6 +3,7 @@ import Menu from "./menu";
 import AllLockers from "./allLockers";
 import PendingLockers from "./pendingLockers";
 import Elections from "./elections";
+import AllOrders from "./allRequests";
   
 export default function Dashboard() {
     const [dashboardComponent, setDashboardComponent] = useState('pending-orders')
@@ -17,6 +18,8 @@ export default function Dashboard() {
                 return <PendingLockers/>
             case 'elections':
                 return <Elections/>
+            case 'all-orders':
+                return <AllOrders/>
             default:
                 return <PendingLockers/>
         }

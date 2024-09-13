@@ -1,7 +1,9 @@
 export default function AllLockers() {
     return (
-        <div className="ml-6">
-            All Lockers
+        <div>
+            <h2>
+                All Lockers
+            </h2>
         </div>
     )
 }

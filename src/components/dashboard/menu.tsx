@@ -37,6 +37,9 @@ export default function Menu({setDashboard}) {
                             <li>
                                 <NavigationMenuLink className="text-sm hover:cursor-pointer" onClick={() => setDashboard("pending-orders")}>Pending Orders</NavigationMenuLink>
                             </li>
+                            <li>
+                                <NavigationMenuLink className="text-sm hover:cursor-pointer" onClick={() => setDashboard("all-orders")}>All Orders</NavigationMenuLink>
+                            </li>
                         </ul>
                         </NavigationMenuContent>
                     </NavigationMenuItem>
