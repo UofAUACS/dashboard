@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
 import {auth} from '../../firebase'
 import { User } from "firebase/auth"
@@ -11,7 +10,15 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
+
+  import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/components/ui/popover"
+  
 import type { Order } from "@/types"
+import { axiosInstance } from "@/requests"
   
 
 export default function PendingLockers() {
@@ -24,7 +31,7 @@ export default function PendingLockers() {
     useEffect(() => {
         const getData = async () => {
             const token = await user?.getIdToken()
-            const response = await axios.get('https://services.uacs.ca/orders/get-all-pending-orders', {
+            const response = await axiosInstance.get('/orders/get-all-pending-orders', {
                 "headers": {
                     "Authorization": `Bearer ${token}`
                 }
@@ -63,9 +70,13 @@ export default function PendingLockers() {
 }
 
 const Order = ({order, updateOrder}: {order: Order, updateOrder: (id: string) => void}) => {
+    const [note, setNote] = useState<string>('')
+    const handleNoteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNote(e.target.value)
+    }
     const approveOrder = async () => {
         const token = await auth.currentUser?.getIdToken()
-        const res = await axios.post(`https://services.uacs.ca/orders/approve-order?order_id=${order.id}`, {
+        const res = await axiosInstance.post(`/orders/approve-order?order_id=${order.id}`, {
             order_id: order.id
         }, {
             "headers": {
@@ -77,10 +88,11 @@ const Order = ({order, updateOrder}: {order: Order, updateOrder: (id: string) =>
             updateOrder(order.id);
         }
     }
-    const rejectOrder = async () => {
+    const rejectOrder = async (send_email: boolean) => {
         const token = await auth.currentUser?.getIdToken()
-        const res = await axios.post(`https://services.uacs.ca/orders/reject-order?order_id=${order.id}`, {
-            order_id: order.id
+        const res = await axiosInstance.post(`/orders/reject-order?order_id=${order.id}&email=${send_email}`, {
+            order_id: order.id,
+            note: note
         }, {
             "headers": {
                 "Authorization": `Bearer ${token}`
@@ -105,7 +117,19 @@ const Order = ({order, updateOrder}: {order: Order, updateOrder: (id: string) =>
             </CardContent>
             <CardFooter className="flex space-x-5">
                 <button className="bg-green-500 text-white p-2 rounded-md w-20" onClick={approveOrder}>Approve</button>
-                <button className="bg-red-500 text-white p-2 rounded-md w-20" onClick={rejectOrder}>Reject</button>
+                <Popover>
+                    <PopoverTrigger className="bg-white p-0">
+                        <button className="bg-red-500 text-white p-2 rounded-md w-20">Reject</button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <div className="flex flex-col space-y-2 p-2">
+                            <p>Are you sure you want to reject this request?</p>
+                            <input type="text" placeholder="Reason for rejection" className="p-2 rounded-md border" onChange={handleNoteChange}/>
+                            <button className=" text-white p-2 rounded-md" onClick={() => rejectOrder(false)}>Reject without email</button>
+                            <button className=" text-white p-2 rounded-md" onClick={() => rejectOrder(true)}>Reject with email</button>
+                        </div>
+                    </PopoverContent>
+                </Popover>
             </CardFooter>
         </Card>
     )
