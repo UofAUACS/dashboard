@@ -6,7 +6,7 @@ import Elections from "./elections";
 import AllOrders from "./allRequests";
   
 export default function Dashboard() {
-    const [dashboardComponent, setDashboardComponent] = useState('pending-orders')
+    const [dashboardComponent, setDashboardComponent] = useState('all-lockers')
     const setDashboard = (component: string) => {
         setDashboardComponent(component);
     }
@@ -21,7 +21,7 @@ export default function Dashboard() {
             case 'all-orders':
                 return <AllOrders/>
             default:
-                return <PendingLockers/>
+                return <AllLockers/>
         }
     }
     return (
