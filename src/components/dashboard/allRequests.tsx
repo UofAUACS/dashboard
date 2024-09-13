@@ -17,10 +17,6 @@ import { axiosInstance } from "@/requests"
 export default function AllOrders() {
     const [pendingOrders, setPendingOrders] = useState<Order[] | undefined>()
     const [user, setUser] = useState<User|null>(null)
-    
-    const updateOrders = (id: string) => {
-        setPendingOrders(pendingOrders?.filter((order) => order.id !== id))
-    }
     useEffect(() => {
         const getData = async () => {
             const token = await user?.getIdToken()
@@ -53,14 +49,14 @@ export default function AllOrders() {
             </h2>
             <div className="flex flex-row flex-wrap  mt-4">
                 {pendingOrders && pendingOrders.length > 0 && pendingOrders?.map((order: Order) => {
-                    return <Order order={order} key={order.id} updateOrder={updateOrders}/>
+                    return <Order order={order} key={order.id}/>
                 })}
             </div>
         </div>
     )
 }
 
-const Order = ({order, updateOrder}: {order: Order, updateOrder: (id: string) => void}) => {
+const Order = ({order}: {order: Order}) => {
     const unixTimeZero = new Date(order.created_at);
     const getStatusColor = (status: string) => {
         switch (status) {
