@@ -54,7 +54,7 @@ export default function PendingLockers() {
         console.log(pendingOrders)
     }, [pendingOrders])
     return (
-        <div className="w-screen ml-6">
+        <div className="ml-6">
             <h2>
                 Pending Lockers
             </h2>
